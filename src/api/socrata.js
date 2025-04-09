@@ -8,7 +8,7 @@ export default {
   fetchCovidData() {
     return axios.get(`${ROOT_URL}`, {
         headers: {
-            X-App-Token: APP_TOKEN,
+            'X-App-Token': APP_TOKEN,
         },
     });
   },
