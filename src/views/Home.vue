@@ -24,10 +24,11 @@
 
 <script>
 import { format, isWeekend, previousFriday } from 'date-fns';
-import DataTitle from '@/components/DataTitle';
-import DataBoxes from '@/components/DataBoxes';
-import LocalitySelect from '@/components/LocalitySelect';
-import socrata from '@/api/socrata';
+import DataTitle from '@/components/DataTitle.vue';
+import DataBoxes from '@/components/DataBoxes.vue';
+import LocalitySelect from '@/components/LocalitySelect.vue';
+import socrata from '@/api/socrata.js';
+import loadingImage from '../assets/hourglass.gif';
 export default {
   name: 'Home',
   components: {
@@ -70,7 +71,7 @@ export default {
       },
       localities: [],
       resultData: [],
-      loadingImage: require('../assets/hourglass.gif'),
+      loadingImage,
     };
   },
   async created() {

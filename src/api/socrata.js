@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const APP_TOKEN = process.env.APP_TOKEN;
+const APP_TOKEN = import.meta.env.VITE_APP_TOKEN;
 const ROOT_URL = 'https://data.virginia.gov/resource/bre9-aqqr.json';
 
 export default {
