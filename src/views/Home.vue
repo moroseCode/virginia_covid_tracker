@@ -27,6 +27,7 @@ import { format, isWeekend, previousFriday } from 'date-fns';
 import DataTitle from '@/components/DataTitle';
 import DataBoxes from '@/components/DataBoxes';
 import LocalitySelect from '@/components/LocalitySelect';
+import socrata from '@/api/socrata';
 export default {
   name: 'Home',
   components: {
@@ -37,20 +38,12 @@ export default {
   methods: {
     async fetchCovidData() {
       let today = new Date();
-      console.log(today);
-      console.log(isWeekend(today));
       if (isWeekend(today)) {
         today = previousFriday(today);
       }
-      let dateString = format(today, 'yyyy-MM-dd');
-      dateString = '2022-01-28';
-      const APP_TOKEN = process.env.APP_TOKEN;
-      const res = await fetch(
-        `https://data.virginia.gov/resource/bre9-aqqr.json?report_date=${dateString}&$$app_token=${APP_TOKEN}`
-      );
-
-      const data = await res.json();
-      return data;
+      const dateString = format(today, 'yyyy-MM-dd');
+      const response = await socrata.fetchCovidData({ report_date: dateString });
+      return response.data;
     },
     getLocalityData(locality) {
       this.stats = locality;
@@ -95,7 +88,6 @@ export default {
       for (const { total_cases } of this.resultData) {
         total += parseInt(total_cases);
       }
-      console.log(total);
       return total;
     },
     totalDeaths() {
@@ -103,7 +95,6 @@ export default {
       for (const { deaths } of this.resultData) {
         total += parseInt(deaths);
       }
-      console.log(total);
       return total;
     },
     totalHospitalizations() {
@@ -111,7 +102,6 @@ export default {
       for (const { hospitalizations } of this.resultData) {
         total += parseInt(hospitalizations);
       }
-      console.log(total);
       return total;
     },
     all_localities() {
