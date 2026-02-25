@@ -5,7 +5,7 @@
     </div>
     <p>
       Data from
-      <a class="text-blue-300" href="data.virginia.gov">data.virginia.gov</a> at
+      <a class="text-blue-300" href="https://data.virginia.gov">data.virginia.gov</a> at
       <a
         class="text-blue-300"
         href="https://dev.socrata.com/foundry/data.virginia.gov/bre9-aqqr"

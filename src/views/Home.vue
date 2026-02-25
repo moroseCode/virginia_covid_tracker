@@ -15,6 +15,9 @@
         Clear Locality
       </button>
     </main>
+    <main v-else-if="error" class="flex flex-col align-center justify-center text-center">
+      <div class="text-red-700 text-3xl mt-10">{{ error }}</div>
+    </main>
     <main class="flex flex-col align-center justify-center text-center" v-else>
       <div class="text-gray-500 text-3xl mt-10 mb-6">Fetching Data</div>
       <img :src="loadingImage" class="w-24 m-auto" alt="" />
@@ -43,8 +46,14 @@ export default {
         today = previousFriday(today);
       }
       const dateString = format(today, 'yyyy-MM-dd');
-      const response = await socrata.fetchCovidData({ report_date: dateString });
-      return response.data;
+      try {
+        const response = await socrata.fetchCovidData({ report_date: dateString });
+        return response.data;
+      } catch (error) {
+        this.error = 'Failed to fetch COVID data. Please try again later.';
+        this.loading = false;
+        return null;
+      }
     },
     getLocalityData(locality) {
       this.stats = locality;
@@ -62,6 +71,7 @@ export default {
   data() {
     return {
       loading: true,
+      error: null,
       title: 'Virginia',
       dataDate: '',
       stats: {
@@ -75,11 +85,13 @@ export default {
     };
   },
   async created() {
-    this.resultData = await this.fetchCovidData();
+    const data = await this.fetchCovidData();
+    if (!data) return;
+    this.resultData = data;
     this.stats.total_cases = this.totalCases;
     this.stats.hospitalizations = this.totalHospitalizations;
     this.stats.deaths = this.totalDeaths;
-    this.dataDate = this.resultData.report_date;
+    this.dataDate = this.resultData[0]?.report_date;
     this.localities = this.all_localities;
     this.loading = false;
   },
@@ -87,21 +99,21 @@ export default {
     totalCases() {
       let total = 0;
       for (const { total_cases } of this.resultData) {
-        total += parseInt(total_cases);
+        total += parseInt(total_cases, 10);
       }
       return total;
     },
     totalDeaths() {
       let total = 0;
       for (const { deaths } of this.resultData) {
-        total += parseInt(deaths);
+        total += parseInt(deaths, 10);
       }
       return total;
     },
     totalHospitalizations() {
       let total = 0;
       for (const { hospitalizations } of this.resultData) {
-        total += parseInt(hospitalizations);
+        total += parseInt(hospitalizations, 10);
       }
       return total;
     },

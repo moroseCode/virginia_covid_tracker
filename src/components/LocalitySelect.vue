@@ -28,7 +28,6 @@ export default {
     onChange() {
       const place = this.resultData.find((item) => item.fips === this.selected);
 
-      console.log(place);
       this.$emit('get-locality', place);
     },
   },
